@@ -20,7 +20,7 @@
     --low:#2a2a28; --accent:#3987e5; --warn-ink:#f2c16b; --warn-bg:#3a2f17;
   }
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box}[hidden]{display:none!important}
 body{margin:0}
 .viz-root{background:var(--surface-1);color:var(--text-primary);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
 main{max-width:980px;margin:0 auto;padding:48px 22px 80px}
@@ -69,19 +69,49 @@ li{margin:6px 0}
 code{font-size:14px;background:var(--surface-2);padding:1px 5px;border-radius:4px}
 footer{margin-top:64px;border-top:1px solid var(--line);padding-top:20px;font-size:14px;color:var(--text-muted)}
 @media (max-width:640px){.bar-row{grid-template-columns:120px 1fr 54px}.finding{grid-template-columns:1fr}}
+
+:root{scroll-behavior:smooth;scroll-padding-top:90px}
+.viz-root{--surface-1:#f7faf9;--surface-2:#eaf1ed;--line:#d7e2dc;--text-primary:#123c32;--text-secondary:#425d55;--text-muted:#5b7169;--accent:#146849;color-scheme:light;background:var(--surface-1)}
+@media(prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .viz-root{--surface-1:#f7faf9;--surface-2:#eaf1ed;--line:#d7e2dc;--text-primary:#123c32;--text-secondary:#425d55;--text-muted:#5b7169;--low:#eaf1ed;--accent:#146849;--warn-ink:#805300;--warn-bg:#fff0cc;color-scheme:light}}
+main{max-width:1180px;padding:48px 32px 40px}
+.topnav{display:flex;align-items:center;justify-content:space-between;gap:24px;max-width:1180px;margin:auto;padding:24px 32px;border-bottom:1px solid var(--line)}
+.brand{font-size:18px;font-weight:800;letter-spacing:-.04em;text-decoration:none;color:var(--text-primary)}
+.brand span{display:inline-grid;place-items:center;background:#176c50;color:white;width:32px;height:32px;border-radius:50%;margin-right:8px;font-size:20px}
+.navlinks{display:flex;gap:24px}.navlinks a{font-size:14px;text-decoration:none;font-weight:600}
+.hero{display:grid;grid-template-columns:1.15fr 1fr;gap:44px;align-items:center;padding:22px 0 40px}
+.eyebrow{color:#176c50;font-weight:700;font-size:13px;letter-spacing:.1em}
+h1{font-size:clamp(38px,5.2vw,66px);letter-spacing:-.055em;line-height:1.05;margin:18px 0 24px}
+h1 em{font-style:normal;color:#23815c}h1 small{display:block;font-size:19px;line-height:1.5;letter-spacing:0;font-weight:500;margin-top:22px}
+.lead{font-size:17px;line-height:1.8}.hero-art{margin:0;position:relative}.hero-art img{width:100%;height:410px;object-fit:cover;border-radius:140px 140px 22px 22px;display:block;background:#ccded7}.hero-art figcaption{font-size:13px;margin-top:12px;color:var(--text-muted)}
+.hero-note{position:absolute;bottom:58px;left:-20px;background:white;padding:16px 22px;border-radius:12px;box-shadow:0 8px 35px #123c321c;font-size:14px}.hero-note strong{display:block;font-size:23px}
+.button{display:inline-block;background:#176c50;color:white;padding:13px 22px;border-radius:8px;text-decoration:none;font-weight:650;font-size:15px;border:1px solid #176c50;cursor:pointer}.hero .button{margin-top:8px}
+.meta{font-size:13px;border-top:1px solid var(--line);padding-top:20px}
+.tiles{gap:16px;margin:28px 0 56px}.tile{background:white;border:1px solid var(--line);padding:24px;border-radius:14px}.tile .n{font-size:36px;letter-spacing:-.04em;color:#176c50}.tile .l{font-size:14px;margin-top:10px}
+h2{font-size:32px;letter-spacing:-.035em;margin:64px 0 18px}h3{font-size:21px;letter-spacing:-.02em}.finding{padding:28px 0;gap:20px}.finding .k{background:#e4eee8;color:#176c50;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:14px}.so{background:#e9f2ed;border-left:3px solid #66a686;border-radius:0 8px 8px 0;padding:16px 18px;line-height:1.7;margin-top:16px}
+.explorer{background:white;border:1px solid var(--line);padding:28px;border-radius:16px;margin-top:48px}.explorer h2{margin:0 0 12px}.controls{display:flex;gap:16px;flex-wrap:wrap;align-items:end;margin:24px 0}.controls label{display:grid;gap:7px;font-size:14px;font-weight:650}select{font:inherit;min-width:160px;padding:11px 36px 11px 12px;border:1px solid #bbcfc3;background:#f7faf9;color:#123c32;border-radius:8px}.filter-status{font-size:14px;color:var(--text-secondary);margin-bottom:18px}.scroll{padding-bottom:10px}.cell{height:34px;font-size:12px;cursor:pointer}.cell:focus-visible{outline:3px solid #e7a432;outline-offset:1px}.heat .ch{font-size:13px}.detail{background:#eaf1ed;padding:14px 18px;border-radius:8px;margin-top:16px;font-size:15px;min-height:52px}.segmented{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 12px}.segmented button{font:inherit;font-size:14px;padding:10px 14px;border:1px solid #bbcfc3;background:white;color:#123c32;border-radius:8px;cursor:pointer}.segmented button[aria-pressed="true"]{background:#176c50;color:white;border-color:#176c50}.bar-row{padding:5px 0}.b{transition:width .35s,opacity .2s}.bar-row:focus-visible{outline:2px solid #176c50}.table-tools{margin-top:24px}th{font-size:14px}td{padding:12px 10px}th{padding:12px 10px;background:#eaf1ed}table caption{text-align:left;font-size:14px;color:var(--text-muted);margin-bottom:12px}
+.method{margin-top:50px;border-top:1px solid var(--line)}details{border-bottom:1px solid var(--line);padding:20px 0}summary{font-size:21px;font-weight:700;cursor:pointer}details ul{line-height:1.8;margin:20px 0 0}
+.author{display:grid;grid-template-columns:160px 1fr;gap:36px;align-items:center;background:#123c32;color:white;padding:40px;border-radius:18px;margin-top:64px}.author img{width:160px;height:160px;object-fit:cover;border-radius:50%;border:4px solid #a7c7b7}.author h2{color:white;margin:6px 0 12px}.author p{color:#d3e3da;max-width:650px}.author .eyebrow{color:#9fceb3}.author a{color:#c4ecd6;text-underline-offset:4px}.author-links{display:flex;flex-wrap:wrap;gap:20px;margin-top:18px}footer{margin-top:30px;font-size:13px}.endnote{display:flex;justify-content:space-between;gap:20px}.skip{position:absolute;top:-100px;left:20px;z-index:20}.skip:focus{top:10px}a:focus-visible,button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #d59b2b;outline-offset:4px}
+@media(max-width:760px){main{padding:26px 20px}.topnav{padding:18px 20px}.navlinks{gap:14px}.navlinks a{font-size:13px}.navlinks a:first-child{display:none}.hero{grid-template-columns:1fr;gap:26px;padding-top:0}.hero-art img{height:300px;border-radius:90px 90px 16px 16px}.hero-note{left:12px}.tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{padding:18px}.tile .n{font-size:28px}.explorer{padding:20px 14px;margin-left:-4px;margin-right:-4px}.author{grid-template-columns:1fr;padding:28px;gap:20px}.author img{width:120px;height:120px}.finding{grid-template-columns:1fr;gap:12px}.endnote{flex-direction:column}.bar-row{grid-template-columns:115px 1fr 54px}h2{font-size:28px}.controls label{flex:1}select{width:100%}}
+@media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}.b{transition:none}}
+
 </style>
 </head>
 <body>
 <div class="viz-root">
-<main>
+<a class="skip button" href="#contenuto">Salta al contenuto</a>
+<nav class="topnav" aria-label="Navigazione principale"><a class="brand" href="#"><span aria-hidden="true">≈</span> Aria / Cuneo</a><div class="navlinks"><a href="#risultati">I risultati</a><a href="#esplora">Esplora i dati</a><a href="#autore">Il progetto</a></div></nav>
+<main id="contenuto">
+<section class="hero"><div>
 <p class="eyebrow">Caso studio indipendente · dati pubblici ARPA Piemonte</p>
-<h1>Possiamo fidarci dei sensori?<br>La qualità dell'aria in provincia di Cuneo, 2026</h1>
+<h1>Possiamo fidarci<br>dei <em>sensori?</em><small>La qualità dell’aria in provincia di Cuneo, 2026</small></h1>
 <p class="lead">Prima di usare i dati di una rete di sensori per prendere decisioni, conviene chiedersi quanto sono affidabili. Ho preso i dati pubblici di 7 stazioni ARPA della provincia di Cuneo e ho costruito un controllo automatico in Python: copertura, buchi, guasti in comune tra stazioni, valori bloccati e confronti corretti tra stazioni.</p>
+<a class="button" href="#esplora">Esplora la rete di sensori</a></div>
+<figure class="hero-art"><img src="assets/cuneo-landscape.svg" alt="Illustrazione del paesaggio alpino e delle stazioni di monitoraggio della provincia di Cuneo" width="560" height="480"><div class="hero-note"><strong>7 stazioni. Una domanda.</strong>Prima delle medie, la qualità dei dati.</div><figcaption>Il territorio come contesto, i dati come punto di partenza. Illustrazione.</figcaption></figure></section>
 <p class="meta" id="meta"></p>
 
 <div class="tiles" id="tiles"></div>
 
-<h2>Cosa ho trovato</h2>
+<h2 id="risultati">I dati raccontano. Anche quando mancano.</h2>
 
 <div class="finding">
  <div class="k">01</div>
@@ -106,7 +136,7 @@ footer{margin-top:64px;border-top:1px solid var(--line);padding-top:20px;font-si
  <div>
   <h3>Il PM10 di Mondovì: 116 giorni su 323, e solo in 4 mesi</h3>
   <p id="f3"></p>
-  <div class="bars" id="pmbars"></div>
+  <div class="segmented" role="group" aria-label="Confronto delle medie PM10"><button type="button" data-mode="both" aria-pressed="true">Confronta i periodi</button><button type="button" data-mode="all" aria-pressed="false">Tutti i giorni validi</button><button type="button" data-mode="common" aria-pressed="false">Gli stessi giorni</button></div><p class="meta" id="pm-description" aria-live="polite">Due medie affiancate per capire quanto conta il periodo osservato.</p><div class="bars" id="pmbars"></div><div class="detail" id="pm-detail" aria-live="polite">Seleziona una stazione per leggere i valori del confronto.</div>
   <div class="legend"><span class="sw" style="background:var(--seq-300)"></span> media su tutti i giorni validi della stazione <span style="width:14px"></span><span class="sw" style="background:var(--seq-600)"></span> media solo sui 116 giorni misurati a Mondovì</div>
   <div class="so" id="f3so"></div>
  </div>
@@ -121,16 +151,16 @@ footer{margin-top:64px;border-top:1px solid var(--line);padding-top:20px;font-si
  </div>
 </div>
 
-<h2>Copertura mese per mese</h2>
+<section class="explorer" id="esplora"><p class="eyebrow">Dentro la rete</p><h2>Esplora la copertura dei dati</h2>
 <p>Percentuale di ore (o giorni, per il PM10) con dato valido. Più chiaro = più dati mancanti o invalidati. Novembre arriva fino al giorno 19. Per il PM10 di novembre l'ultimo dato valido è dell'8 (del 2 a Bra): probabilmente i dati di laboratorio non sono ancora stati pubblicati, quindi quelle celle chiare non sono per forza un guasto.</p>
-<div class="scroll"><div class="heat" id="heat"></div></div>
+<div class="controls"><label>Stazione<select id="station"><option value="">Tutte le stazioni</option></select></label><label>Inquinante<select id="pollutant"><option value="">Tutti gli inquinanti</option><option value="NO2">NO₂ · biossido di azoto</option><option value="O3">O₃ · ozono</option><option value="PM10">PM10 · particolato</option></select></label><button class="button" id="reset" type="button">Ripristina</button></div><p class="filter-status" id="filter-status" aria-live="polite"></p><div class="scroll" tabindex="0" role="region" aria-label="Copertura mensile: scorri orizzontalmente sui piccoli schermi"><div class="heat" id="heat"></div></div><div class="detail" id="cell-detail" aria-live="polite">Seleziona una cella per vedere la copertura del mese.</div>
 <div class="legend" id="heatlegend"></div>
 
 <h2>Scheda di salute di ogni serie</h2>
 <p>Una riga per stazione e inquinante. "Buco più lungo" conta le ore (o i giorni) consecutivi senza un dato valido. "Sequenze piatte" conta i tratti di almeno 6 ore con lo stesso valore.</p>
-<div class="scroll"><table id="tab"></table></div>
+<div class="controls table-tools"><label>Ordina le serie<select id="sort"><option value="coverage">Copertura crescente</option><option value="station">Nome della stazione</option><option value="gap">Buco più lungo</option></select></label><button class="button" id="download" type="button">Scarica le serie visibili · CSV</button></div><div class="scroll" tabindex="0" role="region" aria-label="Tabella della salute delle serie"><table id="tab"></table></div></section>
 
-<h2>Come l'ho fatto</h2>
+<section class="method"><details open><summary>Come l’ho fatto</summary>
 <ul>
  <li><strong>Dati:</strong> le misure orarie di NO<sub>2</sub> e O<sub>3</sub> e quelle giornaliere di PM10 dal servizio pubblico che alimenta <a href="https://aria.ambiente.piemonte.it/qualita-aria/dati">aria.ambiente.piemonte.it</a>. Ogni dato ha uno stato: V (valido), E (invalidato), M (mancante), P (non ancora verificato).</li>
  <li><strong>Pulizia:</strong> ARPA scrive l'ultima ora del giorno come <code>23:59</code>. Se la tratti come le 23 hai ore duplicate, quindi la converto in mezzanotte. I dati in stato P (l'ultimo giorno) sono esclusi perché possono ancora cambiare.</li>
@@ -138,7 +168,7 @@ footer{margin-top:64px;border-top:1px solid var(--line);padding-top:20px;font-si
  <li><strong>Codice:</strong> Python e pandas, con test automatici (pytest). Il report si rigenera con un solo comando quando arrivano dati nuovi.</li>
 </ul>
 
-<h2>Cosa farei in un progetto vero</h2>
+</details><details><summary>Cosa farei in un progetto vero</summary>
 <ul>
  <li>Un report automatico ogni mattina con lo stato di salute di ogni sensore, prima che qualcuno usi i dati.</li>
  <li>Raggruppare i buchi simultanei in un unico incidente, così chi fa manutenzione vede subito se il problema è locale o comune.</li>
@@ -146,9 +176,11 @@ footer{margin-top:64px;border-top:1px solid var(--line);padding-top:20px;font-si
  <li>Mostrare sempre la copertura accanto a ogni media, così nessuno confronta numeri calcolati su periodi diversi.</li>
 </ul>
 
+</details></section>
+<section class="author" id="autore" aria-labelledby="author-title"><img src="assets/felipe-mattos.png" alt="Felipe Mattos, autore del progetto" width="160" height="160" loading="lazy"><div><p class="eyebrow">Dietro i dati</p><h2 id="author-title">Ciao, sono Felipe.</h2><p>Sono Felipe Mattos e vivo a Mondovì. Ho creato questo progetto per esplorare i dati pubblici sulla qualità dell’aria del nostro territorio e capire quanto possiamo fidarci delle misure. Con Python trasformo questi dati in controlli e visualizzazioni, per rendere più chiaro ciò che i numeri raccontano.</p><div class="author-links"><a href="https://github.com/felipervm/qualita-aria-cuneo">Il codice su GitHub</a><a href="https://linkedin.com/in/felipervm">LinkedIn</a><a href="mailto:felipervm22@gmail.com">Parliamone</a></div></div></section>
 <footer>
  <p>Progetto indipendente di <strong>Felipe Mattos</strong> (Mondovì), costruito su dati pubblici. Nessuna affiliazione con ARPA Piemonte. I dati sono di ARPA Piemonte; le interpretazioni sono mie.</p>
- <p><a href="https://github.com/felipervm/qualita-aria-cuneo">Codice su GitHub</a> · <a href="https://linkedin.com/in/felipervm">LinkedIn</a> · felipervm22@gmail.com</p>
+<div class="endnote"><span>Un’analisi di affidabilità dei dati, non un bollettino in tempo reale.</span><a href="#contenuto">Torna all’inizio</a></div>
 </footer>
 </main>
 <div id="tip"></div>
@@ -187,7 +219,7 @@ document.getElementById('f3').innerHTML = `Nel 2026 il PM10 di Mondovì ha dati 
 document.getElementById('f3so').innerHTML = `<b>Perché conta:</b> sugli stessi giorni Mondovì ha ${fmt(mv.media_giorni_riferimento)} µg/m³ contro ${fmt(cn.media_giorni_riferimento)} di Cuneo. Ma la media di Saliceto passa da ${fmt(sal.media_tutti_i_giorni)} a ${fmt(sal.media_giorni_riferimento)} µg/m³ solo cambiando i giorni considerati. Confrontare medie calcolate su periodi diversi può far sembrare un posto più inquinato o più pulito di quello che è. Il motivo della copertura ridotta non è nei dati: si potrebbe chiedere ad ARPA.`;
 const maxv = Math.max(...P.stazioni.flatMap(s=>[s.media_tutti_i_giorni,s.media_giorni_riferimento]));
 document.getElementById('pmbars').innerHTML = P.stazioni.slice().sort((a,b)=>b.media_giorni_riferimento-a.media_giorni_riferimento).map(s=>
-  `<div class="bar-row" data-tip="${s.stazione}<br>Tutti i giorni validi (${s.giorni_validi}): ${fmt(s.media_tutti_i_giorni)} µg/m³<br>Giorni di Mondovì (${s.giorni_in_comune}): ${fmt(s.media_giorni_riferimento)} µg/m³"><div class="nm">${short(s.stazione)}</div><div class="bar-pair"><div class="b b1" style="width:${100*s.media_tutti_i_giorni/maxv}%"></div><div class="b b2" style="width:${100*s.media_giorni_riferimento/maxv}%"></div></div><div class="val">${fmt(s.media_tutti_i_giorni)}<br>${fmt(s.media_giorni_riferimento)}</div></div>`).join('');
+  `<div class="bar-row" tabindex="0" role="button" aria-label="Confronto PM10: ${short(s.stazione)}" data-tip="${s.stazione}<br>Tutti i giorni validi (${s.giorni_validi}): ${fmt(s.media_tutti_i_giorni)} µg/m³<br>Giorni di Mondovì (${s.giorni_in_comune}): ${fmt(s.media_giorni_riferimento)} µg/m³"><div class="nm">${short(s.stazione)}</div><div class="bar-pair"><div class="b b1" style="width:${100*s.media_tutti_i_giorni/maxv}%"></div><div class="b b2" style="width:${100*s.media_giorni_riferimento/maxv}%"></div></div><div class="val">${fmt(s.media_tutti_i_giorni)}<br>${fmt(s.media_giorni_riferimento)}</div></div>`).join('');
 
 const salNo2 = S.find(s=>s.stazione.startsWith('Saliceto') && s.inquinante==='NO2');
 const revNeg = rev.negativi_validi;
@@ -207,7 +239,7 @@ for (const k of ser) {
     const r = R.copertura_mensile.find(x=>x.stazione===s&&x.inquinante===i&&x.mese===m);
     const v = r ? r.copertura_pct : null;
     const [_,bg,fg] = col(v ?? 0);
-    h += `<div class="cell" style="background:${bg};color:${fg}" data-tip="${s} · ${i}<br>${mesiLunghi[m-1]}: ${v===null?'nessun dato':fmt(v)+'% valido'}">${v===null?'':Math.round(v)}</div>`;
+    h += `<div class="cell" role="button" tabindex="0" aria-label="${short(s)} ${i}, ${mesiLunghi[m-1]}: ${v===null?'nessun dato':fmt(v)+'% valido'}" style="background:${bg};color:${fg}" data-tip="${s} · ${i}<br>${mesiLunghi[m-1]}: ${v===null?'nessun dato':fmt(v)+'% valido'}">${v===null?'':Math.round(v)}</div>`;
   }
 }
 H.innerHTML = h;
@@ -225,8 +257,47 @@ document.addEventListener('mousemove', e => {
   if (!t) { tip.style.opacity = 0; return; }
   tip.innerHTML = t.dataset.tip; tip.style.opacity = 1;
   const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8);
-  tip.style.left = x + 'px'; tip.style.top = (e.clientY + 14) + 'px';
+  tip.style.left = x + 'px'; tip.style.top = Math.max(8,Math.min(e.clientY + 14,innerHeight-tip.offsetHeight-8)) + 'px';
 });
+
+// Shared filters keep the heatmap and health table in sync.
+const stationSelect = document.getElementById('station');
+[...new Set(S.map(s=>s.stazione))].sort().forEach(name=>stationSelect.add(new Option(short(name),name)));
+const pollutantSelect = document.getElementById('pollutant');
+const originalRows = [...T.tBodies[0].rows].map((row,index)=>({html:row.outerHTML, data:S.slice().sort((a,b)=>a.copertura_pct-b.copertura_pct)[index]}));
+let visibleSeries = S.slice();
+function filterData(){
+ const station=stationSelect.value, pollutant=pollutantSelect.value;
+ const matches=s=>(!station||s.stazione===station)&&(!pollutant||s.inquinante===pollutant);
+ visibleSeries=S.filter(matches);
+ const order=document.getElementById('sort').value;
+ const compare=(a,b)=>order==='station'?a.stazione.localeCompare(b.stazione)||a.inquinante.localeCompare(b.inquinante):order==='gap'?(b.buco_max*(b.frequenza==='oraria'?1:24))-(a.buco_max*(a.frequenza==='oraria'?1:24)):a.copertura_pct-b.copertura_pct;
+ T.tBodies[0].innerHTML=originalRows.filter(r=>matches(r.data)).sort((a,b)=>compare(a.data,b.data)).map(r=>r.html).join('')||'<tr><td colspan="8">Nessuna serie disponibile per questa combinazione.</td></tr>';
+ const children=[...H.children];
+ ser.forEach((key,index)=>{const [stazione,inquinante]=key.split('|');for(let j=0;j<12;j++)children[12+index*12+j].hidden=!matches({stazione,inquinante});});
+ document.getElementById('filter-status').textContent=`${visibleSeries.length} serie visualizzate · ${station?short(station):'Tutta la provincia'} · ${pollutant||'Tutti gli inquinanti'}`;
+ document.getElementById('cell-detail').textContent=visibleSeries.length?'Seleziona una cella per vedere la copertura del mese.':'Nessuna serie disponibile. Prova un’altra stazione o un altro inquinante.';
+}
+[stationSelect,pollutantSelect,document.getElementById('sort')].forEach(el=>el.addEventListener('change',filterData));
+document.getElementById('reset').addEventListener('click',()=>{stationSelect.value='';pollutantSelect.value='';document.getElementById('sort').value='coverage';filterData();});
+filterData();
+function showDetail(el,target){document.getElementById(target).textContent=el.dataset.tip.replace(/<br>/g,' · ');}
+document.addEventListener('click',e=>{const cell=e.target.closest('.cell');if(cell)showDetail(cell,'cell-detail');const bar=e.target.closest('.bar-row');if(bar)showDetail(bar,'pm-detail');});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.cell,.bar-row')){e.preventDefault();e.target.click();}});
+document.addEventListener('focusin',e=>{if(e.target.matches('.cell'))showDetail(e.target,'cell-detail');if(e.target.matches('.bar-row'))showDetail(e.target,'pm-detail');});
+document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>{
+ const mode=button.dataset.mode;
+ document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ document.querySelectorAll('.bar-row').forEach(row=>{row.querySelector('.b1').style.opacity=mode==='common'?'0.12':'1';row.querySelector('.b2').style.opacity=mode==='all'?'0.12':'1';});
+ document.getElementById('pm-description').textContent=mode==='all'?'In evidenza: medie su tutti i giorni validi di ciascuna stazione. I periodi possono essere diversi.':mode==='common'?'In evidenza: medie calcolate sui giorni misurati a Mondovì, per un confronto sullo stesso periodo.':'Due medie affiancate per capire quanto conta il periodo osservato.';
+}));
+document.getElementById('download').addEventListener('click',()=>{
+ const keys=['stazione','inquinante','copertura_pct','validi','invalidati','mancanti','buco_max','frequenza'];
+ const quote=v=>'"'+String(v??'').replaceAll('"','""')+'"';
+ const csv='\uFEFF'+[keys.join(';'),...visibleSeries.map(s=>keys.map(k=>quote(s[k])).join(';'))].join('\r\n');
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='cuneo-salute-serie.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+
 </script>
 </body>
 </html>
