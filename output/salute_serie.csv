@@ -1,0 +1,18 @@
+stazione,inquinante,frequenza,attesi,validi,invalidati,mancanti,copertura_pct,sotto_soglia,buco_max,buco_max_da,buco_max_a,sequenze_piatte,piatto_max_ore,negativi_validi,timestamp_duplicati
+Alba - Tanaro,NO2,oraria,7752,7728,23,1,99.7,False,3,2026-06-12 10:00:00,2026-06-12 12:00:00,3,7,0,0
+Alba - Tanaro,O3,oraria,7752,7701,47,4,99.3,False,18,2026-08-27 22:00:00,2026-08-28 15:00:00,6,11,0,0
+Alba - Tanaro,PM10,giornaliera,323,308,4,11,95.4,False,11,2026-11-10 00:00:00,2026-11-20 00:00:00,0,0,0,0
+Bra - Madonna Fiori,NO2,oraria,7752,7662,26,64,98.8,False,62,2026-08-14 22:00:00,2026-08-17 11:00:00,0,0,0,0
+Bra - Madonna Fiori,PM10,giornaliera,323,302,4,17,93.5,False,17,2026-11-04 00:00:00,2026-11-20 00:00:00,0,0,0,0
+Cavallermaggiore - Galilei,NO2,oraria,7752,7387,141,224,95.3,False,217,2026-05-13 14:00:00,2026-05-22 14:00:00,2,6,0,0
+Cavallermaggiore - Galilei,PM10,giornaliera,323,120,0,203,37.2,True,153,2026-03-02 00:00:00,2026-08-01 00:00:00,0,0,0,0
+Cuneo - Alpini,NO2,oraria,7752,7470,152,130,96.4,False,121,2026-07-03 10:00:00,2026-07-08 10:00:00,2,6,0,0
+Cuneo - Alpini,O3,oraria,7752,7134,209,409,92.0,False,287,2026-02-04 15:00:00,2026-02-16 13:00:00,0,0,0,0
+Cuneo - Alpini,PM10,giornaliera,323,307,5,11,95.0,False,11,2026-11-10 00:00:00,2026-11-20 00:00:00,0,0,0,0
+Mondovì - Aragno,NO2,oraria,7752,7579,168,5,97.8,False,143,2026-06-12 14:00:00,2026-06-18 12:00:00,0,0,0,0
+Mondovì - Aragno,PM10,giornaliera,323,116,4,203,35.9,True,153,2026-03-02 00:00:00,2026-08-01 00:00:00,0,0,0,0
+Revello - Staffarda,NO2,oraria,7752,7225,56,471,93.2,False,260,2026-05-28 23:00:00,2026-06-08 18:00:00,17,8,0,0
+Revello - Staffarda,O3,oraria,7752,6771,120,861,87.3,True,270,2026-02-05 11:00:00,2026-02-16 16:00:00,19,10,34,0
+Saliceto - Moizo,NO2,oraria,7752,7646,34,72,98.6,False,77,2026-08-04 12:00:00,2026-08-07 16:00:00,76,15,0,0
+Saliceto - Moizo,O3,oraria,7752,7432,29,291,95.9,False,223,2026-02-04 11:00:00,2026-02-13 17:00:00,1,6,0,0
+Saliceto - Moizo,PM10,giornaliera,323,292,19,12,90.4,False,11,2026-08-05 00:00:00,2026-08-15 00:00:00,0,0,0,0

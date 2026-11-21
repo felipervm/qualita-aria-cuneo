@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Possiamo fidarci dei sensori? Qualità dell'aria in provincia di Cuneo, 2026</title>
+<style>
+.viz-root{
+  color-scheme:light;
+  --surface-1:#fcfcfb; --surface-2:#f3f2ef; --line:#e2e1dc;
+  --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#7a7974;
+  --seq-100:#cde2fb; --seq-200:#9ec5f4; --seq-300:#6da7ec; --seq-400:#3987e5; --seq-500:#256abf; --seq-600:#184f95; --seq-700:#0d366b;
+  --low:#f3f2ef; --accent:#2a78d6; --warn-ink:#8a5a00; --warn-bg:#fdf1d8;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])) .viz-root{
+    color-scheme:dark;
+    --surface-1:#1a1a19; --surface-2:#242422; --line:#363633;
+    --text-primary:#f0efec; --text-secondary:#c3c2b7; --text-muted:#9a998f;
+    --low:#2a2a28; --accent:#3987e5; --warn-ink:#f2c16b; --warn-bg:#3a2f17;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0}
+.viz-root{background:var(--surface-1);color:var(--text-primary);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+main{max-width:980px;margin:0 auto;padding:48px 22px 80px}
+.eyebrow{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 10px}
+h1{font-size:clamp(28px,4.4vw,42px);line-height:1.12;margin:0 0 14px;letter-spacing:-.01em}
+h2{font-size:24px;margin:56px 0 12px;line-height:1.2}
+h3{font-size:18px;margin:0 0 6px}
+p{margin:0 0 14px;color:var(--text-secondary)}
+p strong,li strong{color:var(--text-primary)}
+.lead{font-size:19px;max-width:760px}
+.meta{font-size:14px;color:var(--text-muted)}
+a{color:var(--accent)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:28px 0 8px}
+.tile{background:var(--surface-2);border-radius:10px;padding:16px 18px}
+.tile .n{font-size:32px;font-weight:650;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile .l{font-size:14px;color:var(--text-secondary);margin-top:4px}
+.finding{border-top:1px solid var(--line);padding:22px 0 6px;display:grid;grid-template-columns:44px 1fr;gap:10px}
+.finding .k{font-size:15px;font-weight:650;color:var(--text-muted);padding-top:2px}
+.so{font-size:15px;background:var(--surface-2);border-radius:8px;padding:10px 14px;margin:6px 0 10px;color:var(--text-secondary)}
+.so b{color:var(--text-primary)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+th{font-weight:600;color:var(--text-secondary);font-size:13px}
+.flag{display:inline-block;font-size:12px;font-weight:600;padding:1px 7px;border-radius:999px;background:var(--warn-bg);color:var(--warn-ink)}
+.heat{display:grid;gap:2px;font-size:12px;min-width:720px}
+.heat .rl{color:var(--text-secondary);text-align:left;padding:0 8px 0 0;white-space:nowrap;align-self:center;font-size:13px}
+.heat .ch{color:var(--text-muted);text-align:center;font-size:12px;padding-bottom:4px}
+.cell{height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;font-size:11px;cursor:default;position:relative}
+.cell:hover{outline:2px solid var(--text-primary);outline-offset:-2px}
+.legend{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary);margin:12px 0 0;flex-wrap:wrap}
+.legend span.sw{width:26px;height:14px;border-radius:3px;display:inline-block}
+#tip{position:fixed;pointer-events:none;background:var(--text-primary);color:var(--surface-1);font-size:13px;padding:7px 10px;border-radius:6px;opacity:0;transition:opacity .08s;z-index:10;max-width:260px}
+.bars{margin-top:10px}
+.bar-row{display:grid;grid-template-columns:200px 1fr 64px;gap:10px;align-items:center;margin:6px 0;font-size:14px}
+.bar-row .nm{color:var(--text-secondary)}
+.bar-track{position:relative;height:18px}
+.bar-pair{display:flex;flex-direction:column;gap:3px}
+.b{height:8px;border-radius:0 4px 4px 0}
+.b1{background:var(--seq-300)}
+.b2{background:var(--seq-600)}
+.val{font-variant-numeric:tabular-nums;font-size:13px;color:var(--text-secondary);text-align:right}
+ul{color:var(--text-secondary);padding-left:20px}
+li{margin:6px 0}
+code{font-size:14px;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+footer{margin-top:64px;border-top:1px solid var(--line);padding-top:20px;font-size:14px;color:var(--text-muted)}
+@media (max-width:640px){.bar-row{grid-template-columns:120px 1fr 54px}.finding{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="viz-root">
+<main>
+<p class="eyebrow">Caso studio indipendente · dati pubblici ARPA Piemonte</p>
+<h1>Possiamo fidarci dei sensori?<br>La qualità dell'aria in provincia di Cuneo, 2026</h1>
+<p class="lead">Prima di usare i dati di una rete di sensori per prendere decisioni, conviene chiedersi quanto sono affidabili. Ho preso i dati pubblici di 7 stazioni ARPA della provincia di Cuneo e ho costruito un controllo automatico in Python: copertura, buchi, guasti in comune tra stazioni, valori bloccati e confronti corretti tra stazioni.</p>
+<p class="meta" id="meta"></p>
+
+<div class="tiles" id="tiles"></div>
+
+<h2>Cosa ho trovato</h2>
+
+<div class="finding">
+ <div class="k">01</div>
+ <div>
+  <h3>La rete funziona bene, ma non tutte le serie sono uguali</h3>
+  <p id="f1"></p>
+  <div class="so" id="f1so"></div>
+ </div>
+</div>
+
+<div class="finding">
+ <div class="k">02</div>
+ <div>
+  <h3>Tre stazioni senza ozono negli stessi 12 giorni: probabilmente una causa sola</h3>
+  <p id="f2"></p>
+  <div class="so"><b>Perché conta:</b> se lo stesso buco compare in più stazioni nello stesso momento, il problema probabilmente non è il singolo sensore ma qualcosa in comune (manutenzione programmata, trasmissione, sistema centrale). Un sistema di monitoraggio dovrebbe aprire <b>un solo allarme</b> e non tre, e mandarlo alla persona giusta. Dai dati pubblici non si vede la causa: è un'ipotesi da verificare.</div>
+ </div>
+</div>
+
+<div class="finding">
+ <div class="k">03</div>
+ <div>
+  <h3>Il PM10 di Mondovì: 116 giorni su 323, e solo in 4 mesi</h3>
+  <p id="f3"></p>
+  <div class="bars" id="pmbars"></div>
+  <div class="legend"><span class="sw" style="background:var(--seq-300)"></span> media su tutti i giorni validi della stazione <span style="width:14px"></span><span class="sw" style="background:var(--seq-600)"></span> media solo sui 116 giorni misurati a Mondovì</div>
+  <div class="so" id="f3so"></div>
+ </div>
+</div>
+
+<div class="finding">
+ <div class="k">04</div>
+ <div>
+  <h3>La stessa regola non va bene per tutti i sensori</h3>
+  <p id="f4"></p>
+  <div class="so"><b>Perché conta:</b> una regola unica come "valore fermo per 6 ore = sensore guasto" darebbe decine di falsi allarmi a Saliceto. Le soglie vanno tarate per ogni sensore e per il suo livello di segnale.</div>
+ </div>
+</div>
+
+<h2>Copertura mese per mese</h2>
+<p>Percentuale di ore (o giorni, per il PM10) con dato valido. Più chiaro = più dati mancanti o invalidati. Novembre arriva fino al giorno 19. Per il PM10 di novembre l'ultimo dato valido è dell'8 (del 2 a Bra): probabilmente i dati di laboratorio non sono ancora stati pubblicati, quindi quelle celle chiare non sono per forza un guasto.</p>
+<div class="scroll"><div class="heat" id="heat"></div></div>
+<div class="legend" id="heatlegend"></div>
+
+<h2>Scheda di salute di ogni serie</h2>
+<p>Una riga per stazione e inquinante. "Buco più lungo" conta le ore (o i giorni) consecutivi senza un dato valido. "Sequenze piatte" conta i tratti di almeno 6 ore con lo stesso valore.</p>
+<div class="scroll"><table id="tab"></table></div>
+
+<h2>Come l'ho fatto</h2>
+<ul>
+ <li><strong>Dati:</strong> le misure orarie di NO<sub>2</sub> e O<sub>3</sub> e quelle giornaliere di PM10 dal servizio pubblico che alimenta <a href="https://aria.ambiente.piemonte.it/qualita-aria/dati">aria.ambiente.piemonte.it</a>. Ogni dato ha uno stato: V (valido), E (invalidato), M (mancante), P (non ancora verificato).</li>
+ <li><strong>Pulizia:</strong> ARPA scrive l'ultima ora del giorno come <code>23:59</code>. Se la tratti come le 23 hai ore duplicate, quindi la converto in mezzanotte. I dati in stato P (l'ultimo giorno) sono esclusi perché possono ancora cambiare.</li>
+ <li><strong>Controlli:</strong> copertura per serie e per mese, buco più lungo, buchi nello stesso momento in più stazioni, valori uguali per più ore, valori negativi segnati come validi, confronto delle medie sugli stessi giorni.</li>
+ <li><strong>Codice:</strong> Python e pandas, con test automatici (pytest). Il report si rigenera con un solo comando quando arrivano dati nuovi.</li>
+</ul>
+
+<h2>Cosa farei in un progetto vero</h2>
+<ul>
+ <li>Un report automatico ogni mattina con lo stato di salute di ogni sensore, prima che qualcuno usi i dati.</li>
+ <li>Raggruppare i buchi simultanei in un unico incidente, così chi fa manutenzione vede subito se il problema è locale o comune.</li>
+ <li>Soglie diverse per ogni sensore, calcolate sulla sua storia, invece di una regola unica.</li>
+ <li>Mostrare sempre la copertura accanto a ogni media, così nessuno confronta numeri calcolati su periodi diversi.</li>
+</ul>
+
+<footer>
+ <p>Progetto indipendente di <strong>Felipe Mattos</strong> (Mondovì), costruito su dati pubblici. Nessuna affiliazione con ARPA Piemonte. I dati sono di ARPA Piemonte; le interpretazioni sono mie.</p>
+ <p><a href="https://github.com/felipervm/__REPO__">Codice su GitHub</a> · <a href="https://linkedin.com/in/felipervm">LinkedIn</a> · felipervm22@gmail.com</p>
+</footer>
+</main>
+<div id="tip"></div>
+</div>
+<script>
+const R = __DATA__;
+const fmt = (n, d=1) => n.toLocaleString('it-IT', {minimumFractionDigits:d, maximumFractionDigits:d});
+const int = n => n.toLocaleString('it-IT');
+const mesi = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov'];
+const mesiLunghi = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre'];
+const S = R.salute;
+const short = s => s.split(' - ')[0];
+const dt = s => { const d = new Date(s.replace(' ','T')); return d.getDate()+' '+mesiLunghi[d.getMonth()]; };
+
+const totValidi = S.reduce((a,s)=>a+s.validi,0), totAttesi = S.reduce((a,s)=>a+s.attesi,0);
+const sotto = S.filter(s=>s.sotto_soglia);
+document.getElementById('meta').textContent = `Periodo: 1 gennaio – 19 novembre 2026 · ${R.stazioni.length} stazioni · ${S.length} serie · ${int(R.righe_totali)} righe scaricate (${int(R.escluso_non_verificato.righe)} del 20 novembre escluse perché non ancora verificate)`;
+
+const o3 = R.buchi_comuni.filter(b=>b.inquinante==='O3').sort((a,b)=>b.ore-a.ore)[0];
+document.getElementById('tiles').innerHTML = [
+  [fmt(100*totValidi/totAttesi), '% dei dati attesi è valido'],
+  [`${S.length - sotto.length} su ${S.length}`, `serie sopra il ${R.soglia_copertura}% di copertura`],
+  [`${o3.ore} ore`, `buco di ozono in comune tra ${o3.stazioni.length} stazioni`],
+  [`${R.confronto_pm10.giorni_riferimento}`, 'giorni di PM10 validi a Mondovì su 323'],
+].map(([n,l])=>`<div class="tile"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+
+document.getElementById('f1').innerHTML = `Su ${S.length} serie, <strong>${S.length - sotto.length} hanno almeno il ${R.soglia_copertura}% di dati validi</strong>, la quota di solito richiesta per le statistiche annuali. Le eccezioni sono ${sotto.map(s=>`<strong>${s.inquinante} a ${short(s.stazione)}</strong> (${fmt(s.copertura_pct)}%)`).join(', ')}.`;
+const rev = S.find(s=>s.stazione.startsWith('Revello') && s.inquinante==='O3');
+document.getElementById('f1so').innerHTML = `<b>Perché conta:</b> una media calcolata su una serie incompleta sembra uguale alle altre, ma vale meno. A Revello l'ozono ha ${int(rev.validi)} ore valide su ${int(rev.attesi)}, con un buco di ${rev.buco_max} ore di fila (${dt(rev.buco_max_da)} – ${dt(rev.buco_max_a)}).`;
+
+document.getElementById('f2').innerHTML = `Dal <strong>${dt(o3.da)} al ${dt(o3.a)}</strong> l'ozono manca per ${o3.ore} ore nello stesso momento a <strong>${o3.stazioni.map(short).join(', ')}</strong>, cioè ${o3.stazioni.length} delle ${o3.stazioni_totali} stazioni che lo misurano. Solo ${o3.stazioni_attive_con_dati.map(short).join(', ')} ha continuato a trasmettere. Negli stessi giorni il biossido di azoto di quelle stazioni era regolare.`;
+
+const P = R.confronto_pm10, get = n => P.stazioni.find(s=>s.stazione.startsWith(n));
+const mv = get('Mondovì'), cn = get('Cuneo'), sal = get('Saliceto');
+document.getElementById('f3').innerHTML = `Nel 2026 il PM10 di Mondovì ha dati validi solo a <strong>${P.mesi_riferimento.map(m=>mesiLunghi[m-1]).join(', ')}</strong>. Cavallermaggiore ha lo stesso schema. Una media "2026" di Mondovì quindi non contiene né la primavera né l'autunno. Per confrontarla con le altre stazioni ho calcolato le medie <strong>sugli stessi giorni</strong>.`;
+document.getElementById('f3so').innerHTML = `<b>Perché conta:</b> sugli stessi giorni Mondovì ha ${fmt(mv.media_giorni_riferimento)} µg/m³ contro ${fmt(cn.media_giorni_riferimento)} di Cuneo. Ma la media di Saliceto passa da ${fmt(sal.media_tutti_i_giorni)} a ${fmt(sal.media_giorni_riferimento)} µg/m³ solo cambiando i giorni considerati. Confrontare medie calcolate su periodi diversi può far sembrare un posto più inquinato o più pulito di quello che è. Il motivo della copertura ridotta non è nei dati: si potrebbe chiedere ad ARPA.`;
+const maxv = Math.max(...P.stazioni.flatMap(s=>[s.media_tutti_i_giorni,s.media_giorni_riferimento]));
+document.getElementById('pmbars').innerHTML = P.stazioni.slice().sort((a,b)=>b.media_giorni_riferimento-a.media_giorni_riferimento).map(s=>
+  `<div class="bar-row" data-tip="${s.stazione}<br>Tutti i giorni validi (${s.giorni_validi}): ${fmt(s.media_tutti_i_giorni)} µg/m³<br>Giorni di Mondovì (${s.giorni_in_comune}): ${fmt(s.media_giorni_riferimento)} µg/m³"><div class="nm">${short(s.stazione)}</div><div class="bar-pair"><div class="b b1" style="width:${100*s.media_tutti_i_giorni/maxv}%"></div><div class="b b2" style="width:${100*s.media_giorni_riferimento/maxv}%"></div></div><div class="val">${fmt(s.media_tutti_i_giorni)}<br>${fmt(s.media_giorni_riferimento)}</div></div>`).join('');
+
+const salNo2 = S.find(s=>s.stazione.startsWith('Saliceto') && s.inquinante==='NO2');
+const revNeg = rev.negativi_validi;
+document.getElementById('f4').innerHTML = `A Saliceto, stazione rurale, il biossido di azoto è molto basso: <strong>__SAL_MED__ µg/m³ di mediana, e nel __SAL_PCT__% delle ore è sotto i 5 µg/m³</strong>. Con valori interi a quella scala il numero resta spesso uguale: ${salNo2.sequenze_piatte} tratti di almeno 6 ore con lo stesso valore, il più lungo di ${salNo2.piatto_max_ore} ore. Non è per forza un guasto, è segnale basso. A Revello invece ${revNeg} valori di ozono pari a −1 sono segnati come validi: probabilmente rumore dello strumento vicino allo zero, ma chi usa i dati deve sapere come trattarli.`;
+
+// heatmap
+const ser = [...new Set(R.copertura_mensile.map(r=>r.stazione+'|'+r.inquinante))].sort((a,b)=>{const [sa,ia]=a.split('|'),[sb,ib]=b.split('|');return ia.localeCompare(ib)||sa.localeCompare(sb)});
+const steps = [[99,'var(--seq-700)','#fff'],[95,'var(--seq-500)','#fff'],[90,'var(--seq-300)','#0b0b0b'],[50,'var(--seq-100)','#0b0b0b'],[0,'var(--low)','var(--text-secondary)']];
+const col = v => steps.find(s=>v>=s[0]);
+const H = document.getElementById('heat');
+H.style.gridTemplateColumns = `190px repeat(${mesi.length},1fr)`;
+let h = '<div></div>' + mesi.map(m=>`<div class="ch">${m}</div>`).join('');
+for (const k of ser) {
+  const [s,i] = k.split('|');
+  h += `<div class="rl">${i} · ${short(s)}</div>`;
+  for (let m=1;m<=mesi.length;m++){
+    const r = R.copertura_mensile.find(x=>x.stazione===s&&x.inquinante===i&&x.mese===m);
+    const v = r ? r.copertura_pct : null;
+    const [_,bg,fg] = col(v ?? 0);
+    h += `<div class="cell" style="background:${bg};color:${fg}" data-tip="${s} · ${i}<br>${mesiLunghi[m-1]}: ${v===null?'nessun dato':fmt(v)+'% valido'}">${v===null?'':Math.round(v)}</div>`;
+  }
+}
+H.innerHTML = h;
+document.getElementById('heatlegend').innerHTML = 'Dati validi nel mese: ' + [['≥ 99%',steps[0][1]],['95–99%',steps[1][1]],['90–95%',steps[2][1]],['50–90%',steps[3][1]],['< 50%',steps[4][1]]].map(([l,c])=>`<span class="sw" style="background:${c}"></span>${l}`).join(' &nbsp;');
+
+// table
+const T = document.getElementById('tab');
+T.innerHTML = '<thead><tr><th>Stazione</th><th>Inquinante</th><th>Copertura</th><th>Validi</th><th>Invalidati</th><th>Mancanti</th><th>Buco più lungo</th><th>Sequenze piatte</th></tr></thead><tbody>' +
+  S.slice().sort((a,b)=>a.copertura_pct-b.copertura_pct).map(s=>`<tr><td>${s.stazione}</td><td>${s.inquinante}</td><td>${fmt(s.copertura_pct)}% ${s.sotto_soglia?'<span class="flag">sotto 90%</span>':''}</td><td>${int(s.validi)}</td><td>${int(s.invalidati)}</td><td>${int(s.mancanti)}</td><td>${s.buco_max} ${s.frequenza==='oraria'?'ore':'giorni'}</td><td>${s.frequenza==='oraria'?s.sequenze_piatte:'–'}</td></tr>`).join('') + '</tbody>';
+
+// tooltip
+const tip = document.getElementById('tip');
+document.addEventListener('mousemove', e => {
+  const t = e.target.closest('[data-tip]');
+  if (!t) { tip.style.opacity = 0; return; }
+  tip.innerHTML = t.dataset.tip; tip.style.opacity = 1;
+  const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8);
+  tip.style.left = x + 'px'; tip.style.top = (e.clientY + 14) + 'px';
+});
+</script>
+</body>
+</html>
