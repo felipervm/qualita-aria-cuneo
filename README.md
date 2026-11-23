@@ -4,6 +4,7 @@ Caso studio indipendente su dati pubblici di ARPA Piemonte.
 Prima di usare i dati di una rete di sensori per prendere decisioni, controllo quanto sono affidabili.
 
 **Pagina:** https://felipervm.github.io/qualita-aria-cuneo/
+**Control room (prototipo):** https://felipervm.github.io/qualita-aria-cuneo/control-room/
 
 ## Cosa controlla
 
@@ -12,6 +13,20 @@ Prima di usare i dati di una rete di sensori per prendere decisioni, controllo q
 - buchi nello stesso momento in più stazioni (possibile causa comune)
 - valori uguali per molte ore di fila e valori negativi segnati come validi
 - confronto delle medie PM10 sugli stessi giorni
+
+## Control room: il report delle 8:00
+
+Un prototipo di report giornaliero sulla salute dei sensori, come lo userebbe una control room.
+Per ogni sensore e ogni giorno:
+
+- **non trasmette:** nessun dato valido
+- **dati parziali:** meno di 18 ore valide su 24
+- **valori ripetuti:** 6 o più ore di fila con lo stesso valore, sopra 5 µg/m³
+- **spento:** non trasmette da più di 14 giorni
+- **in attesa:** PM10 dopo l'ultimo giorno pubblicato da ARPA (ritardo del laboratorio, non un guasto)
+- **guasto comune:** lo stesso inquinante manca in 2 o più stazioni nello stesso giorno, quindi va controllata prima la trasmissione
+
+Il prototipo gira su dati già validati da ARPA. In una control room vera gli stessi controlli girerebbero sui dati grezzi appena arrivano.
 
 ## Dati
 
@@ -26,7 +41,8 @@ Lo script usato per scaricarli è in `fetch/`. I dati in stato P (non ancora ver
 ```bash
 pip install -r requirements.txt
 python src/qualita.py data/arpa_cuneo_2026.csv.gz output/
-python build_site.py          # genera docs/index.html
+python src/control_room.py data/arpa_cuneo_2026.csv.gz output/control_room.json
+python build_site.py          # genera docs/index.html e docs/control-room/index.html
 pytest -q
 ```
 
@@ -35,9 +51,9 @@ pytest -q
 ```
 data/        export ARPA (csv.gz)
 fetch/       script per scaricare i dati
-src/         controlli di qualità (qualita.py)
+src/         controlli di qualità (qualita.py) e report giornaliero (control_room.py)
 tests/       test automatici
-output/      salute_serie.csv e report.json
+output/      salute_serie.csv, report.json e control_room.json
 site/        template della pagina
 docs/        pagina pubblicata (GitHub Pages)
 ```

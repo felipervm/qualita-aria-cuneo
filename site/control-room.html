@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control room: salute dei sensori · Felipe Mattos</title>
+<meta name="description" content="Prototipo di report giornaliero sulla salute dei sensori ambientali, costruito sui dati reali ARPA della provincia di Cuneo.">
+<style>
+:root{
+  --bg:#f7faf9; --card:#ffffff; --line:#d7e2dc; --ink:#123c32; --ink2:#425d55; --muted:#5b7169;
+  --accent:#146849; --soft:#eaf1ed;
+  --ok:#2b8460; --ok-bg:#e3f2ea;
+  --warn:#8a5a00; --warn-bg:#fdf1d8;
+  --serious:#a4470b; --serious-bg:#fde6d6;
+  --crit:#b3261e; --crit-bg:#fbe3e1;
+  --off:#6b6f6d; --off-bg:#eceeed;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+.top{font-size:.85rem;color:var(--muted);margin-bottom:18px}
+h1{font-size:clamp(1.7rem,3.2vw,2.4rem);line-height:1.15;margin:0 0 10px}
+h2{font-size:1.2rem;margin:0 0 10px}
+.lead{color:var(--ink2);max-width:780px;margin:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-top:18px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.controls label{font-size:.85rem;color:var(--muted)}
+input[type=date]{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:6px;color:var(--ink);background:#fff}
+.preset{font:inherit;font-size:.85rem;padding:7px 11px;border:1px solid var(--line);border-radius:18px;background:var(--soft);color:var(--ink);cursor:pointer}
+.preset:hover,.preset.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.tile{border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.tile b{display:block;font-size:1.8rem;font-variant-numeric:tabular-nums}
+.tile span{font-size:.85rem;color:var(--muted)}
+.msg{white-space:pre-line;background:var(--soft);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;font-size:.95rem}
+.msg .h{font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{text-align:left;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line);padding:8px}
+td{border-bottom:1px solid var(--line);padding:9px 8px;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;padding:2px 9px;border-radius:12px;white-space:nowrap}
+.s-ok{color:var(--ok);background:var(--ok-bg)} .s-bloccato{color:var(--warn);background:var(--warn-bg)}
+.s-parziale{color:var(--serious);background:var(--serious-bg)} .s-fermo{color:var(--crit);background:var(--crit-bg)}
+.s-spento,.s-in_attesa{color:var(--off);background:var(--off-bg)}
+.strip{display:flex;gap:2px}
+.strip i{width:9px;height:16px;border-radius:2px;display:block}
+.c-ok{background:#9fd1b6} .c-bloccato{background:#e9b949} .c-parziale{background:#e07b39} .c-fermo{background:#c8372d} .c-spento,.c-in_attesa{background:#c9cecc} .c-none{background:transparent;border:1px dashed var(--line)}
+.det{color:var(--ink2)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.8rem;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:14px;border-radius:2px;display:inline-block}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+ul.rules{margin:0;padding-left:20px;color:var(--ink2)} ul.rules li{margin-bottom:6px}
+.note{font-size:.85rem;color:var(--muted)}
+.scroll{overflow-x:auto}
+@media (max-width:760px){.kpi{grid-template-columns:1fr}.two{grid-template-columns:1fr}.strip i{width:6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="../">← Analisi completa dei sensori ARPA</a></div>
+  <h1>Control room: quali sensori controllare stamattina</h1>
+  <p class="lead">Un prototipo di report che arriva ogni mattina alle 8 e dice, in ordine di priorità, quali sensori non stanno funzionando bene. L'ho costruito sui dati reali di 7 stazioni ARPA in provincia di Cuneo (17 sensori, gennaio–novembre 2026), ma le stesse regole valgono per i sensori di aria, rumore e presenze di un'isola smart.</p>
+
+  <div class="card">
+    <div class="controls">
+      <label for="giorno">Giorno del report</label>
+      <input type="date" id="giorno">
+      <span class="note">oppure guarda un caso:</span>
+      <button class="preset" data-g="__ULTIMO__">Ultimo giorno disponibile</button>
+      <button class="preset" data-g="2026-02-12">12 feb: ozono fermo in 3 stazioni</button>
+      <button class="preset" data-g="2026-08-04">4 ago: dati parziali in 3 stazioni</button>
+      <button class="preset" data-g="2026-11-06">6 nov: un PM10 fermo da 4 giorni</button>
+    </div>
+    <div class="kpi">
+      <div class="tile"><b id="k-ok">–</b><span>sensori ok</span></div>
+      <div class="tile"><b id="k-al">–</b><span>da controllare</span></div>
+      <div class="tile"><b id="k-off">–</b><span>spenti o in attesa del dato</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Il messaggio delle 8:00</h2>
+    <p class="note" style="margin-top:-4px">Quello che riceverebbe il tecnico via email o Telegram.</p>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="card">
+    <h2>Tutti i sensori</h2>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Sensore</th><th>Stato</th><th>Dettaglio</th><th>Ultimi 30 giorni</th></tr></thead>
+      <tbody id="righe"></tbody>
+    </table>
+    </div>
+    <div class="legend">
+      <span><i class="c-ok"></i>ok</span><span><i class="c-bloccato"></i>valori ripetuti</span>
+      <span><i class="c-parziale"></i>dati parziali</span><span><i class="c-fermo"></i>non trasmette</span>
+      <span><i class="c-spento"></i>spento o in attesa</span>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h2>Le regole</h2>
+      <ul class="rules">
+        <li><b>Non trasmette:</b> nessun dato valido nel giorno.</li>
+        <li><b>Dati parziali:</b> meno di __ORE_MIN__ ore valide su 24.</li>
+        <li><b>Valori ripetuti:</b> __PIATTO__ o più ore di fila con lo stesso valore, sopra __BASSO__ µg/m³. Sotto questa soglia i valori ripetuti sono normali (segnale molto basso), quindi non do l'allarme.</li>
+        <li><b>Guasto comune:</b> lo stesso inquinante manca in 2 o più stazioni nello stesso giorno. Probabilmente non è il sensore ma la trasmissione o la centrale: è la prima cosa da guardare.</li>
+        <li><b>Spento:</b> fermo da più di __SPENTO__ giorni. Non è più un allarme quotidiano, ma va chiesto se è voluto.</li>
+        <li><b>In attesa:</b> il PM10 arriva dal laboratorio con qualche giorno di ritardo. Dopo il __ULTIMO_PM10__ nessuna stazione ha il dato, quindi non è un guasto.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Su un'isola smart</h2>
+      <ul class="rules">
+        <li>Le stesse regole funzionano per aria, rumore, vibrazioni e presenze: un sensore che non trasmette, che manda dati a metà o che ripete lo stesso numero per ore.</li>
+        <li>Con le soglie giuste per ogni sensore: per esempio, un contatore di presenze a zero durante un evento in piazza è sospetto.</li>
+        <li>Il guasto comune aiuta a non mandare un tecnico in montagna quando il problema è la connessione.</li>
+        <li>Il report si può mandare ogni mattina via email o Telegram, oppure mostrare nella dashboard della control room.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top:22px">Dati: ARPA Piemonte, Sistema Regionale di Rilevamento della Qualità dell'Aria, dati validati. In una control room vera il controllo girerebbe sui dati grezzi appena arrivano. Codice: <a href="https://github.com/felipervm/qualita-aria-cuneo">github.com/felipervm/qualita-aria-cuneo</a> (src/control_room.py). Progetto indipendente di Felipe Mattos, Mondovì.</p>
+</div>
+
+<script>
+const D = __DATA__;
+const NOMI = {ok:"OK", bloccato:"Valori ripetuti", parziale:"Dati parziali", fermo:"Non trasmette", spento:"Spento", in_attesa:"In attesa del dato"};
+const ICONE = {ok:"✓", bloccato:"◐", parziale:"◑", fermo:"✕", spento:"–", in_attesa:"…"};
+const PRIO = {fermo:4, parziale:3, bloccato:2, spento:1, in_attesa:0, ok:0};
+const MESI = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+const INQ = {NO2:"biossido di azoto (NO2)", O3:"ozono (O3)", PM10:"polveri sottili (PM10)"};
+
+function data(iso){ const [a,m,g]=iso.split("-"); return `${+g} ${MESI[+m-1]} ${a}`; }
+function giornoPrima(iso, n){ const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()-n); return d.toISOString().slice(0,10); }
+function citta(s){ return s.split(" - ")[0]; }
+
+function primaDellAttesa(s){
+  const g = D.ultimo_pm10; const x = D.per_giorno[g] && D.per_giorno[g].sensori.find(y=>y.stazione===s.stazione && y.inquinante===s.inquinante);
+  return x ? x : null;
+}
+function dettaglio(s, giorno){
+  const dal = s.giorni_di_fila > 1 ? ` · dal ${data(giornoPrima(giorno, s.giorni_di_fila-1))} (${s.giorni_di_fila}° giorno)` : "";
+  switch(s.stato){
+    case "fermo": return "nessun dato valido" + dal;
+    case "parziale": return `${s.validi}/24 ore valide` + dal;
+    case "bloccato": return `${s.piatto_ore} ore di fila a ${String(s.piatto_valore).replace(".",",")} µg/m³` + dal;
+    case "spento": return `nessun dato da ${s.fermo_da} giorni`;
+    case "in_attesa": { const p = primaDellAttesa(s); return (p && ["spento","fermo"].includes(p.stato)) ? `dato di laboratorio non ancora pubblicato, ma già senza dati prima (${data(D.ultimo_pm10)}, ultimo giorno pubblicato: ${NOMI[p.stato].toLowerCase()})` : "dato di laboratorio non ancora pubblicato"; }
+    default: return s.segnale_basso ? `ok (valori ripetuti ma segnale basso)` : (s.validi===1 ? "dato del giorno presente" : `${s.validi}/24 ore valide`);
+  }
+}
+
+function striscia(s, giorno){
+  const i = D.giorni.indexOf(giorno); const out=[];
+  for(let k=i-29;k<=i;k++){
+    const g = D.giorni[k]; if(!g){ out.push('<i class="c-none"></i>'); continue; }
+    const x = D.per_giorno[g].sensori.find(y=>y.stazione===s.stazione && y.inquinante===s.inquinante);
+    const st = x ? x.stato : "none";
+    out.push(`<i class="c-${st}" title="${data(g)}: ${NOMI[st]||'nessun dato'}"></i>`);
+  }
+  return `<div class="strip">${out.join("")}</div>`;
+}
+
+function messaggio(giorno, v){
+  const al = v.sensori.filter(s=>["fermo","parziale","bloccato"].includes(s.stato));
+  const ok = v.sensori.filter(s=>s.stato==="ok").length;
+  const righe = [`<span class="h">Report sensori del ${data(giorno)}</span>`, `${ok} sensori ok, ${al.length} da controllare.`];
+  const coperti = new Set();
+  let n = 1; const pr = [];
+  for(const c of v.comuni){
+    c.stazioni.forEach(st=>coperti.add(st+"|"+c.inquinante));
+    pr.push(`${n++}. ${INQ[c.inquinante]} assente o incompleto in ${c.stazioni.length} stazioni su ${c.su} (${c.stazioni.map(citta).join(", ")}). Probabile causa comune: controllare prima trasmissione e centrale.`);
+  }
+  al.filter(s=>!coperti.has(s.stazione+"|"+s.inquinante))
+    .sort((a,b)=>PRIO[b.stato]-PRIO[a.stato] || b.giorni_di_fila-a.giorni_di_fila)
+    .forEach(s=> pr.push(`${n++}. ${s.stazione}, ${s.inquinante}: ${NOMI[s.stato].toLowerCase()}, ${dettaglio(s, giorno)}.`));
+  if(pr.length){ righe.push("", "<span class='h'>Priorità</span>", ...pr); } else { righe.push("", "Nessun intervento necessario."); }
+  const att = v.sensori.filter(s=>s.stato==="in_attesa");
+  const sp = v.sensori.filter(s=>s.stato==="spento");
+  if(att.length || sp.length) righe.push("", "<span class='h'>Da sapere</span>");
+  if(att.length){
+    const prima = att.filter(s=>{ const p=primaDellAttesa(s); return p && ["spento","fermo"].includes(p.stato); });
+    righe.push(`PM10 in attesa del laboratorio in ${att.length} stazioni: non è un guasto.`);
+    if(prima.length) { const n = prima.map(s=>citta(s.stazione)); const lista = n.length>1 ? n.slice(0,-1).join(", ")+" e "+n[n.length-1] : n[0];
+      righe.push(`Ma ${lista} ${n.length>1?"erano":"era"} già senza dati PM10 nell'ultimo giorno pubblicato (${data(D.ultimo_pm10)}): da verificare.`); }
+  }
+  if(sp.length) righe.push(`Spenti da più di ${D.regole.spento_dopo} giorni: ${sp.map(s=>citta(s.stazione)+" "+s.inquinante).join(", ")}. Verificare se è voluto.`);
+  return righe.join("\n");
+}
+
+function mostra(giorno){
+  if(!D.per_giorno[giorno]) giorno = D.giorni[D.giorni.length-1];
+  document.getElementById("giorno").value = giorno;
+  document.querySelectorAll(".preset").forEach(b=>b.classList.toggle("on", b.dataset.g===giorno));
+  const v = D.per_giorno[giorno];
+  const al = v.sensori.filter(s=>["fermo","parziale","bloccato"].includes(s.stato)).length;
+  const off = v.sensori.filter(s=>["spento","in_attesa"].includes(s.stato)).length;
+  document.getElementById("k-ok").textContent = v.sensori.length - al - off;
+  document.getElementById("k-al").textContent = al;
+  document.getElementById("k-off").textContent = off;
+  document.getElementById("msg").innerHTML = messaggio(giorno, v);
+  const ord = [...v.sensori].sort((a,b)=>PRIO[b.stato]-PRIO[a.stato] || b.giorni_di_fila-a.giorni_di_fila || a.stazione.localeCompare(b.stazione));
+  document.getElementById("righe").innerHTML = ord.map(s=>`<tr>
+    <td><b>${s.stazione}</b><br><span class="note">${s.inquinante}</span></td>
+    <td><span class="badge s-${s.stato}">${ICONE[s.stato]} ${NOMI[s.stato]}</span></td>
+    <td class="det">${dettaglio(s, giorno)}</td>
+    <td>${striscia(s, giorno)}</td></tr>`).join("");
+}
+
+const inp = document.getElementById("giorno");
+inp.min = D.giorni[0]; inp.max = D.giorni[D.giorni.length-1];
+inp.addEventListener("change", e=>mostra(e.target.value));
+document.querySelectorAll(".preset").forEach(b=>b.addEventListener("click", ()=>mostra(b.dataset.g)));
+mostra("2026-02-12");
+</script>
+</body>
+</html>
